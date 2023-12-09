@@ -6,19 +6,24 @@ class ChatProvider extends ChangeNotifier {
     Chat(
       owner: 'Papan',
       text: 'Halo...',
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
     ),
     Chat(
       owner: 'Lele',
       text: 'Halo juga',
-      createdAt: DateTime.now().add(const Duration(minutes: 3)),
+      createdAt: DateTime.now().subtract(const Duration(minutes: 2)),
     ),
     Chat(
       owner: 'Har',
       text: 'Hmmm',
-      createdAt: DateTime.now().add(const Duration(minutes: 5)),
+      createdAt: DateTime.now(),
     ),
   ];
 
   List<Chat> get chats => _chats;
+
+  void add(Chat chat) {
+    _chats.add(chat);
+    notifyListeners();
+  }
 }
