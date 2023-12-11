@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whats_ai/chat_screen.dart';
+import 'package:whats_ai/login_screen.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
+import 'package:whats_ai/provider/user_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -23,9 +26,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const ChatScreen(
-          owner: 'Lele',
-        ),
+        routes: {
+          '/': (context) => const LoginScreen(),
+          '/chat': (context) => ChatScreen(
+              owner: ModalRoute.of(context)?.settings.arguments as String),
+        },
+        initialRoute: '/',
       ),
     );
   }
