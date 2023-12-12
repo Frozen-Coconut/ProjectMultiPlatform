@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whats_ai/chat.dart';
@@ -5,15 +6,14 @@ import 'package:whats_ai/chat_tile.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String owner;
-
-  const ChatScreen({super.key, required this.owner});
+  const ChatScreen({super.key});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _auth = FirebaseAuth.instance;
   final _textController = TextEditingController();
 
   @override
@@ -24,10 +24,28 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_auth.currentUser == null) Navigator.pop(context);
     final List<Chat> chats =
         Provider.of<ChatProvider>(context, listen: false).chats;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () async {
+            await _auth.signOut();
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text('Chat'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await _auth.signOut();
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
+      ),
       body: SafeArea(
         child: Consumer<ChatProvider>(
           builder: (context, ChatProvider chatProvider, consumerWidget) {
@@ -37,10 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: ListView.builder(
                     itemCount: chats.length,
                     itemBuilder: (context, index) {
-                      return ChatTile(
-                        chat: chats[index],
-                        owner: widget.owner,
-                      );
+                      return ChatTile(chat: chats[index], owner: _auth.currentUser?.email as String);
                     },
                   ),
                 ),
@@ -57,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () {
                           if (_textController.text.isNotEmpty) {
                             chatProvider.add(Chat(
-                              owner: widget.owner,
+                              owner: _auth.currentUser?.email as String,
                               text: _textController.text,
                               createdAt: DateTime.now(),
                             ));

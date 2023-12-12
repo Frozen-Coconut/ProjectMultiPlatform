@@ -1,7 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:whats_ai/provider/user_provider.dart';
-import 'package:whats_ai/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,20 +9,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameTextController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    _usernameTextController.dispose();
+    _emailTextController.dispose();
     _passwordTextController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<User> users =
-        Provider.of<UserProvider>(context, listen: false).users;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -37,8 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
-                controller: _usernameTextController,
-                decoration: const InputDecoration(labelText: 'Username'),
+                controller: _emailTextController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               const SizedBox(height: 16.0),
               TextField(
@@ -49,23 +47,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-                  User user;
+                onPressed: () async {
                   try {
-                    user = users.firstWhere((User user) =>
-                        user.username == _usernameTextController.text);
+                    await _auth.signInWithEmailAndPassword(
+                      email: _emailTextController.text,
+                      password: _passwordTextController.text,
+                    );
+                    Navigator.pushNamed(context, '/chat');
+                    _emailTextController.text = '';
+                    _passwordTextController.text = '';
                   } catch (exception) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('User does not exist!')));
-                    return;
+                        SnackBar(content: Text(exception.toString())));
                   }
-                  if (!user.checkPassword(_passwordTextController.text)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid password!')));
-                    return;
-                  }
-                  Navigator.pushNamed(context, '/chat',
-                      arguments: user.username);
                 },
                 child: const Text('Login'),
               ),

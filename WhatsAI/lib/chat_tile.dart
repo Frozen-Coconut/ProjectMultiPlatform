@@ -10,7 +10,7 @@ class ChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(chat.owner == owner ? '${chat.owner} (me)' : chat.owner),
+      title: Text(chat.owner == owner ? 'Me' : chat.owner),
       subtitle: Text(chat.text),
       trailing: Text(chat.createdAt.toIso8601String()),
       onTap: () {},

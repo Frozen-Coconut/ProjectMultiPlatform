@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388706912604",
+    "project_id": "whatsai-9e093",
+    "storage_bucket": "whatsai-9e093.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388706912604:android:e29660b0f104cc14779999",
+        "android_client_info": {
+          "package_name": "com.example.whats_ai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANyglNoG_ALojYrHnvMRQSokvnjausii8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

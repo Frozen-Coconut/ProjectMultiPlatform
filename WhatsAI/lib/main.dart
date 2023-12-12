@@ -1,11 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whats_ai/chat_screen.dart';
+import 'package:whats_ai/firebase_options.dart';
 import 'package:whats_ai/login_screen.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
-import 'package:whats_ai/provider/user_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -18,7 +23,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ChatProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -28,8 +32,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => const LoginScreen(),
-          '/chat': (context) => ChatScreen(
-              owner: ModalRoute.of(context)?.settings.arguments as String),
+          '/chat': (context) => ChatScreen(),
         },
         initialRoute: '/',
       ),
