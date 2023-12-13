@@ -53,12 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       email: _emailTextController.text,
                       password: _passwordTextController.text,
                     );
-                    Navigator.pushNamed(context, '/chat');
+                    Navigator.pushNamed(context, '/chatroom');
                     _emailTextController.text = '';
                     _passwordTextController.text = '';
                   } catch (exception) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(exception.toString())));
+                        SnackBar(content: Text('Login failed')));
                   }
                 },
                 child: const Text('Login'),

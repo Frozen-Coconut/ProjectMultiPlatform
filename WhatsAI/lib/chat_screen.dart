@@ -6,7 +6,9 @@ import 'package:whats_ai/chat_tile.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String chatRoomName;
+
+  const ChatScreen({super.key, required this.chatRoomName});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -24,38 +26,29 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_auth.currentUser == null) Navigator.pop(context);
-    final List<Chat> chats =
-        Provider.of<ChatProvider>(context, listen: false).chats;
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () async {
-            await _auth.signOut();
-            Navigator.pop(context);
-          },
-        ),
         title: const Text('Chat'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await _auth.signOut();
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.logout),
-          )
-        ],
       ),
       body: SafeArea(
         child: Consumer<ChatProvider>(
           builder: (context, ChatProvider chatProvider, consumerWidget) {
+            final List<Chat> chats = Provider.of<ChatProvider>(context,
+                    listen: false)
+                .chats
+                .where((element) =>
+                    element.chatRoomName == widget.chatRoomName &&
+                    element.chatRoomOwner == _auth.currentUser?.email as String)
+                .toList();
             return Column(
               children: [
                 Expanded(
                   child: ListView.builder(
                     itemCount: chats.length,
                     itemBuilder: (context, index) {
-                      return ChatTile(chat: chats[index], owner: _auth.currentUser?.email as String);
+                      return ChatTile(
+                          chat: chats[index],
+                          owner: _auth.currentUser?.email as String);
                     },
                   ),
                 ),
@@ -75,6 +68,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               owner: _auth.currentUser?.email as String,
                               text: _textController.text,
                               createdAt: DateTime.now(),
+                              chatRoomName: widget.chatRoomName,
+                              chatRoomOwner: _auth.currentUser?.email as String,
                             ));
                           }
                           _textController.text = '';

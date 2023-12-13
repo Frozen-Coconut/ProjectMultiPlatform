@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whats_ai/chat_room_screen.dart';
 import 'package:whats_ai/chat_screen.dart';
 import 'package:whats_ai/firebase_options.dart';
 import 'package:whats_ai/login_screen.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
+import 'package:whats_ai/provider/chat_room_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => ChatRoomProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: MaterialApp(
@@ -32,7 +35,10 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => const LoginScreen(),
-          '/chat': (context) => ChatScreen(),
+          '/chatroom': (context) => const ChatRoomScreen(),
+          '/chat': (context) => ChatScreen(
+              chatRoomName:
+                  ModalRoute.of(context)?.settings.arguments as String),
         },
         initialRoute: '/',
       ),
