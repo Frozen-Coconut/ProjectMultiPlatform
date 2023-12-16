@@ -18,11 +18,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget build(BuildContext context) {
     return Consumer<ChatRoomProvider>(
       builder: (context, ChatRoomProvider chatRoomProvider, consumerWidget) {
-        final List<ChatRoom> chatRooms =
-            Provider.of<ChatRoomProvider>(context, listen: false)
-                .chats
-                .where((element) => element.owner == _auth.currentUser?.email)
-                .toList();
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -35,16 +30,27 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             title: const Text('Chat Room'),
           ),
           body: SafeArea(
-            child: ListView.builder(
-              itemCount: chatRooms.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(chatRooms[index].name),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/chat',
-                        arguments: chatRooms[index].name);
-                  },
-                );
+            child: FutureBuilder(
+              future: Provider.of<ChatRoomProvider>(context, listen: false)
+                  .getChatRooms(owner: _auth.currentUser?.email as String),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  final chatRooms = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: chatRooms.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(chatRooms[index].name),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/chat',
+                              arguments: chatRooms[index].name);
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: Text('Loading...'));
+                }
               },
             ),
           ),
@@ -69,9 +75,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                         child: const Text('Cancel'),
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (textController.text.isEmpty) return;
-                          if (chatRoomProvider.add(ChatRoom(
+                          if (await chatRoomProvider.add(ChatRoom(
                             owner: _auth.currentUser?.email as String,
                             name: textController.text,
                           ))) {

@@ -33,22 +33,28 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Consumer<ChatProvider>(
           builder: (context, ChatProvider chatProvider, consumerWidget) {
-            final List<Chat> chats = Provider.of<ChatProvider>(context,
-                    listen: false)
-                .chats
-                .where((element) =>
-                    element.chatRoomName == widget.chatRoomName &&
-                    element.chatRoomOwner == _auth.currentUser?.email as String)
-                .toList();
             return Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: chats.length,
-                    itemBuilder: (context, index) {
-                      return ChatTile(
-                          chat: chats[index],
-                          owner: _auth.currentUser?.email as String);
+                  child: FutureBuilder(
+                    future: Provider.of<ChatProvider>(context, listen: false)
+                        .getChats(
+                            chatRoomName: widget.chatRoomName,
+                            chatRoomOwner: _auth.currentUser?.email as String),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        final chats = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: chats.length,
+                          itemBuilder: (context, index) {
+                            return ChatTile(
+                                chat: chats[index],
+                                owner: _auth.currentUser?.email as String);
+                          },
+                        );
+                      } else {
+                        return const Center(child: Text('Loading...'));
+                      }
                     },
                   ),
                 ),

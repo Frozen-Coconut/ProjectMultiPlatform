@@ -11,4 +11,11 @@ class Chat {
       required this.createdAt,
       required this.chatRoomName,
       required this.chatRoomOwner});
+
+  Chat.fromSnapshot(Map<String, dynamic> snapshot)
+      : owner = snapshot['owner'],
+        text = snapshot['text'],
+        createdAt = snapshot['created_at'].toDate(),
+        chatRoomName = snapshot['chat_room_name'],
+        chatRoomOwner = snapshot['chat_room_owner'];
 }
