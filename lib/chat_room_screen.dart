@@ -49,7 +49,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     },
                   );
                 } else {
-                  return const Center(child: Text('Loading...'));
+                  // return const Center(child: Text('Loading...'));
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
