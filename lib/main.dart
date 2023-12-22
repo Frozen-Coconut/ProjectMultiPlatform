@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whats_ai/api_test_screen.dart';
 import 'package:whats_ai/chat_room_screen.dart';
 import 'package:whats_ai/chat_screen.dart';
 import 'package:whats_ai/firebase_options.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           '/chat': (context) => ChatScreen(
               chatRoomName:
                   ModalRoute.of(context)?.settings.arguments as String),
+          '/apitest': (context) => const ApiTestScreen(),
         },
         initialRoute: '/',
       ),
