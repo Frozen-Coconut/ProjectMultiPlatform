@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whats_ai/api_service.dart';
 import 'package:whats_ai/chat.dart';
 import 'package:whats_ai/chat_tile.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
@@ -69,11 +72,20 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_textController.text.isNotEmpty) {
                             chatProvider.add(Chat(
                               owner: _auth.currentUser?.email as String,
                               text: _textController.text,
+                              createdAt: DateTime.now(),
+                              chatRoomName: widget.chatRoomName,
+                              chatRoomOwner: _auth.currentUser?.email as String,
+                            ));
+                            String response =
+                                await ApiService.generate(_textController.text);
+                            chatProvider.add(Chat(
+                              owner: 'Bot',
+                              text: jsonDecode(response)['candidates'][0]['content']['parts'][0]['text'],
                               createdAt: DateTime.now(),
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,
