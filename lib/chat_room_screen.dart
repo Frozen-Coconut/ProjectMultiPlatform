@@ -36,6 +36,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   final chatRooms = snapshot.data!;
+                  chatRooms.sort((chatRoom1, chatRoom2) =>
+                      chatRoom2.updatedAt.compareTo(chatRoom1.updatedAt));
                   return ListView.builder(
                     itemCount: chatRooms.length,
                     itemBuilder: (context, index) {
@@ -81,6 +83,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           if (await chatRoomProvider.add(ChatRoom(
                             owner: _auth.currentUser?.email as String,
                             name: textController.text,
+                            updatedAt: DateTime.now(),
                           ))) {
                             Navigator.of(context).pop();
                           } else {

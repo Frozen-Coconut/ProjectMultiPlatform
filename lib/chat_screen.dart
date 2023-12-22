@@ -47,7 +47,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         final chats = snapshot.data!;
+                        chats.sort((chat1, chat2) =>
+                            chat2.createdAt.compareTo(chat1.createdAt));
                         return ListView.builder(
+                          reverse: true,
                           itemCount: chats.length,
                           itemBuilder: (context, index) {
                             return ChatTile(
@@ -74,26 +77,27 @@ class _ChatScreenState extends State<ChatScreen> {
                       IconButton(
                         onPressed: () async {
                           if (_textController.text.isNotEmpty) {
+                            String text = _textController.text;
+                            _textController.text = '';
                             chatProvider.add(Chat(
                               owner: _auth.currentUser?.email as String,
-                              text: _textController.text,
+                              text: text,
                               createdAt: DateTime.now(),
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,
                             ));
-                            String response =
-                                await ApiService.generate(_textController.text);
+                            String response = await ApiService.generate(text);
                             chatProvider.add(Chat(
                               owner: 'Bot',
-                              text: jsonDecode(response)['candidates'][0]['content']['parts'][0]['text'],
+                              text: jsonDecode(response)['candidates'][0]
+                                  ['content']['parts'][0]['text'],
                               createdAt: DateTime.now(),
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,
                             ));
                           }
-                          _textController.text = '';
                         },
-                        icon: const Icon(Icons.chat),
+                        icon: const Icon(Icons.send),
                       )
                     ],
                   ),

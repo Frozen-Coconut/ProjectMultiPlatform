@@ -26,7 +26,11 @@ class ChatRoomProvider extends ChangeNotifier {
     if (allData.isNotEmpty) {
       return false;
     } else {
-      _chatRooms.add({'owner': chatRoom.owner, 'name': chatRoom.name});
+      _chatRooms.add({
+        'owner': chatRoom.owner,
+        'name': chatRoom.name,
+        'updated_at': chatRoom.updatedAt
+      });
       notifyListeners();
       return true;
     }
