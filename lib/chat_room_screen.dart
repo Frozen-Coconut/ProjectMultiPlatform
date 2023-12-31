@@ -13,6 +13,7 @@ class ChatRoomScreen extends StatefulWidget {
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final _auth = FirebaseAuth.instance;
+  String dropdownValue = 'eP7G9I6yOj7hNwd_N1UQnc6DyK7tKnjqQ7dKasi2_d4';
 
   @override
   Widget build(BuildContext context) {
@@ -57,52 +58,84 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               },
             ),
           ),
-          floatingActionButton: IconButton(
-            onPressed: () {
-              final textController = TextEditingController();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Add Chat Room'),
-                    content: TextField(
-                      controller: textController,
-                      decoration:
-                          const InputDecoration(labelText: 'Chat Room Name'),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
+          floatingActionButton: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor,
+            child: IconButton(
+              onPressed: () {
+                final textController = TextEditingController();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Add Chat Room'),
+                      // content: TextField(
+                      //   controller: textController,
+                      //   decoration:
+                      //       const InputDecoration(labelText: 'Chat Room Name'),
+                      // ),
+                      content: DropdownButton<String>(
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
                         },
-                        child: const Text('Cancel'),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'eP7G9I6yOj7hNwd_N1UQnc6DyK7tKnjqQ7dKasi2_d4',
+                            child: Text('Novel Writing AI'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'qtEICpGfFS8f5Zr5kCHR1EsGsHlawNutYSZJq_IEZDY',
+                            child: Text('Pair Programmer'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'W4MWmsvbFFnKF8b9e3Eg6ZUNzdhqvEZYy-tNRtxB_Og',
+                            child: Text('Alternate Timeline'),
+                          ),DropdownMenuItem(
+                            value: 'YntB_ZeqRq2l_aVf2gWDCZl4oBttQzDvhj9cXafWcF8',
+                            child: Text('Character Assistant'),
+                          ),DropdownMenuItem(
+                            value: '9ZSDyg3OuPbFgDqGwy3RpsXqJblE4S1fKA_oU3yvfTM',
+                            child: Text('Creative Helper'),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () async {
-                          if (textController.text.isEmpty) return;
-                          if (await chatRoomProvider.add(ChatRoom(
-                            owner: _auth.currentUser?.email as String,
-                            name: textController.text,
-                            updatedAt: DateTime.now(),
-                          ))) {
+                      actions: [
+                        TextButton(
+                          onPressed: () {
                             Navigator.of(context).pop();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Invalid Chat Room Name')));
-                          }
-                        },
-                        child: const Text('Create'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            icon: const Icon(Icons.add),
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            if (await chatRoomProvider.add(ChatRoom(
+                              owner: _auth.currentUser?.email as String,
+                              name: dropdownValue,
+                              updatedAt: DateTime.now(),
+                            ))) {
+                              Navigator.of(context).pop();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Error')));
+                            }
+                          },
+                          child: const Text('Create'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
           ),
         );
       },
     );
   }
 }
+

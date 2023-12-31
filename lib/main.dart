@@ -8,6 +8,7 @@ import 'package:whats_ai/firebase_options.dart';
 import 'package:whats_ai/login_screen.dart';
 import 'package:whats_ai/provider/chat_provider.dart';
 import 'package:whats_ai/provider/chat_room_provider.dart';
+import 'package:whats_ai/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,18 +32,22 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple
+          ),
+
           useMaterial3: true,
         ),
         routes: {
-          '/': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
+          '/login': (context) => const LoginScreen(),
           '/chatroom': (context) => const ChatRoomScreen(),
           '/chat': (context) => ChatScreen(
               chatRoomName:
                   ModalRoute.of(context)?.settings.arguments as String),
           '/apitest': (context) => const ApiTestScreen(),
         },
-        initialRoute: '/',
+        initialRoute: '/login',
       ),
     );
   }

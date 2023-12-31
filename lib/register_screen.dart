@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _auth = FirebaseAuth.instance;
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor
+              color: Theme.of(context).canvasColor
           ),
           child: Center(
             child: Container(
@@ -53,8 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 64.0),
-                        child: Text("Login",
-                        style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                        child: Text("Register",
+                            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
                       ),
                     ),
                     TextField(
@@ -73,23 +73,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          await _auth.signInWithEmailAndPassword(
+                          await _auth.createUserWithEmailAndPassword(
                             email: _emailTextController.text,
                             password: _passwordTextController.text,
                           );
-                          Navigator.pushNamed(context, '/chatroom');
+                          Navigator.pushNamed(context, '/login');
                           _emailTextController.text = '';
                           _passwordTextController.text = '';
                         } catch (exception) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Login failed')));
+                              SnackBar(content: Text('Register failed')));
                         }
                       },
-                      child: const Text('Login'),
+                      child: const Text('Register'),
                     ),
                     TextButton(onPressed: (){
-                      Navigator.popAndPushNamed(context, '/register');
-                    }, child: const Text("Don't have an account?"))
+                      Navigator.popAndPushNamed(context, '/login');
+                    }, child: const Text("Have an account?"))
                   ],
                 ),
               ),
