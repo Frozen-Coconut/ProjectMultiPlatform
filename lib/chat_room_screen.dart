@@ -17,6 +17,7 @@ class ChatRoomScreen extends StatefulWidget {
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final _auth = FirebaseAuth.instance;
   String dropdownValue = 'Novel Writing AI';
+  var _chatRooms = <ChatRoom>[];
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +40,28 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   .getChatRooms(owner: _auth.currentUser?.email as String),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  final chatRooms = snapshot.data!;
-                  chatRooms.sort((chatRoom1, chatRoom2) =>
+                  _chatRooms = snapshot.data!;
+                  _chatRooms.sort((chatRoom1, chatRoom2) =>
                       chatRoom2.updatedAt.compareTo(chatRoom1.updatedAt));
                   return ListView.builder(
-                    itemCount: chatRooms.length,
+                    itemCount: _chatRooms.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(chatRooms[index].name),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/chat',
-                              arguments: chatRooms[index].name);
+                        title: Text(_chatRooms[index].name),
+                        onTap: () async{
+                          await Navigator.pushNamed(context, '/chat',
+                              arguments: _chatRooms[index].name);
+
+                          Provider.of<ChatRoomProvider>(context, listen: false)
+                              .getChatRooms(owner: _auth.currentUser?.email as String)
+                              .then((data){
+                                  setState(() {
+                                    _chatRooms = data;
+                                    _chatRooms.sort((chatRoom1, chatRoom2) =>
+                                        chatRoom2.updatedAt.compareTo(chatRoom1.updatedAt));
+                                  });
+                                  print(data.toString());
+                              });
                         },
                       );
                     },
@@ -65,7 +77,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             backgroundColor: Theme.of(context).primaryColor,
             child: IconButton(
               onPressed: () {
-                final textController = TextEditingController();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
