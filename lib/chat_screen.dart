@@ -87,11 +87,13 @@ class _ChatScreenState extends State<ChatScreen> {
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,
                             ));
-                            String response = await ApiService.generate(text); //TODO: change api service
+                            String response = await ApiService.generate(
+                                text,
+                                widget.chatRoomName,
+                                _auth.currentUser?.email as String);
                             chatProvider.add(Chat(
                               owner: 'Bot',
-                              text: jsonDecode(response)['candidates'][0]
-                                  ['content']['parts'][0]['text'],
+                              text: response,
                               createdAt: DateTime.now(),
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,

@@ -3,22 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String _apiUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models';
-  static const String _apiKey = 'AIzaSyAv4oR4vQe6oy6rH_nJAMsKh4rY5z9nIx0';
+  static const String _apiUrl = 'http://localhost:3000/';
 
-  static Future<String> generate(String text) async {
+  static Future<String> generate(
+      String text, String characterName, String email) async {
     final response = await http.post(
-      Uri.parse('$_apiUrl/gemini-pro:generateContent?key=$_apiKey'),
+      Uri.parse('$_apiUrl/chat'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'contents': [
-          {
-            'parts': [
-              {'text': text}
-            ]
-          }
-        ]
+        'message': text,
+        'character_name': characterName,
+        'email': email
       }),
     );
     if (response.statusCode == 200) {

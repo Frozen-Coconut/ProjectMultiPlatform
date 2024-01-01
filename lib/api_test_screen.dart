@@ -15,12 +15,13 @@ class ApiTestScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder(
-            future: ApiService.generate('Hello'),
+            future: ApiService.generate(
+                'Hello', 'Novel Writing AI', 'user1@example.com'),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(jsonDecode(snapshot.data as String)['candidates'][0]['content']['parts'][0]['text']),
+                  child: Text(snapshot.data as String),
                 );
               } else {
                 return const Center(child: CircularProgressIndicator());
