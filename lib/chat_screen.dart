@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +89,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                 text,
                                 widget.chatRoomName,
                                 _auth.currentUser?.email as String);
+                            QuerySnapshot querySnapshot =
+                            await FirebaseFirestore.instance.collection("chat_rooms").where('owner', isEqualTo: _auth.currentUser?.email as String).get();
+                            var docId = querySnapshot.docs.first.id;
+                            await FirebaseFirestore.instance.collection("chat_rooms").doc(docId).update({
+                                "name": widget.chatRoomName,
+                                "owner": _auth.currentUser?.email as String,
+                                "updated_at": DateTime.now(),
+                            });
                             chatProvider.add(Chat(
                               owner: 'Bot',
                               text: response,
