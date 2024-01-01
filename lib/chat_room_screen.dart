@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:whats_ai/api_service.dart';
+import 'package:whats_ai/chat.dart';
 import 'package:whats_ai/chat_room.dart';
+import 'package:whats_ai/provider/chat_provider.dart';
 import 'package:whats_ai/provider/chat_room_provider.dart';
 
 class ChatRoomScreen extends StatefulWidget {
@@ -98,10 +101,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           DropdownMenuItem(
                             value: 'Alternate Timeline',
                             child: Text('Alternate Timeline'),
-                          ),DropdownMenuItem(
+                          ),
+                          DropdownMenuItem(
                             value: 'Character Assistant',
                             child: Text('Character Assistant'),
-                          ),DropdownMenuItem(
+                          ),
+                          DropdownMenuItem(
                             value: 'Creative Helper',
                             child: Text('Creative Helper'),
                           ),
@@ -121,11 +126,19 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                               name: dropdownValue,
                               updatedAt: DateTime.now(),
                             ))) {
+                              Provider.of<ChatProvider>(context, listen: false)
+                                  .add(Chat(
+                                owner: _auth.currentUser?.email as String,
+                                text: await ApiService.history(dropdownValue),
+                                createdAt: DateTime.now(),
+                                chatRoomName: dropdownValue,
+                                chatRoomOwner:
+                                    _auth.currentUser?.email as String,
+                              ));
                               Navigator.of(context).pop();
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Error')));
+                                  const SnackBar(content: Text('Error')));
                             }
                           },
                           child: const Text('Create'),
@@ -143,4 +156,3 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     );
   }
 }
-
