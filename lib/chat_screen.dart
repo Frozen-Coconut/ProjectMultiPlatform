@@ -90,7 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 widget.chatRoomName,
                                 _auth.currentUser?.email as String);
                             QuerySnapshot querySnapshot =
-                            await FirebaseFirestore.instance.collection("chat_rooms").where('owner', isEqualTo: _auth.currentUser?.email as String).get();
+                            await FirebaseFirestore.instance.collection("chat_rooms").where('name', isEqualTo: widget.chatRoomName).where('owner', isEqualTo: _auth.currentUser?.email as String).get();
                             var docId = querySnapshot.docs.first.id;
                             await FirebaseFirestore.instance.collection("chat_rooms").doc(docId).update({
                                 "name": widget.chatRoomName,
