@@ -29,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: send chatbot id to api
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
@@ -86,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               chatRoomName: widget.chatRoomName,
                               chatRoomOwner: _auth.currentUser?.email as String,
                             ));
-                            String response = await ApiService.generate(text);
+                            String response = await ApiService.generate(text); //TODO: change api service
                             chatProvider.add(Chat(
                               owner: 'Bot',
                               text: jsonDecode(response)['candidates'][0]

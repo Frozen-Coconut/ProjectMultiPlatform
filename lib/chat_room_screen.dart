@@ -13,7 +13,7 @@ class ChatRoomScreen extends StatefulWidget {
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final _auth = FirebaseAuth.instance;
-  String dropdownValue = 'eP7G9I6yOj7hNwd_N1UQnc6DyK7tKnjqQ7dKasi2_d4';
+  String dropdownValue = 'Novel Writing AI';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       //   decoration:
                       //       const InputDecoration(labelText: 'Chat Room Name'),
                       // ),
-                      content: DropdownButton<String>(
+                      content: DropdownButtonFormField<String>(
                         value: dropdownValue,
                         elevation: 16,
                         onChanged: (value) {
@@ -81,23 +81,28 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             dropdownValue = value!;
                           });
                         },
+                        onSaved: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
                         items: const [
                           DropdownMenuItem(
-                            value: 'eP7G9I6yOj7hNwd_N1UQnc6DyK7tKnjqQ7dKasi2_d4',
+                            value: 'Novel Writing AI',
                             child: Text('Novel Writing AI'),
                           ),
                           DropdownMenuItem(
-                            value: 'qtEICpGfFS8f5Zr5kCHR1EsGsHlawNutYSZJq_IEZDY',
+                            value: 'Pair Programmer',
                             child: Text('Pair Programmer'),
                           ),
                           DropdownMenuItem(
-                            value: 'W4MWmsvbFFnKF8b9e3Eg6ZUNzdhqvEZYy-tNRtxB_Og',
+                            value: 'Alternate Timeline',
                             child: Text('Alternate Timeline'),
                           ),DropdownMenuItem(
-                            value: 'YntB_ZeqRq2l_aVf2gWDCZl4oBttQzDvhj9cXafWcF8',
+                            value: 'Character Assistant',
                             child: Text('Character Assistant'),
                           ),DropdownMenuItem(
-                            value: '9ZSDyg3OuPbFgDqGwy3RpsXqJblE4S1fKA_oU3yvfTM',
+                            value: 'Creative Helper',
                             child: Text('Creative Helper'),
                           ),
                         ],
