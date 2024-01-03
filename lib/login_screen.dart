@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:whats_ai/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             email: _emailTextController.text,
                             password: _passwordTextController.text,
                           );
+                          ApiService.login();
                           Navigator.pushNamed(context, '/chatroom');
                           _emailTextController.text = '';
                           _passwordTextController.text = '';

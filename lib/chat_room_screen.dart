@@ -60,7 +60,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                     _chatRooms.sort((chatRoom1, chatRoom2) =>
                                         chatRoom2.updatedAt.compareTo(chatRoom1.updatedAt));
                                   });
-                                  print(data.toString());
                               });
                         },
                       );

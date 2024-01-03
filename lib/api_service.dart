@@ -20,6 +20,13 @@ class ApiService {
     }
   }
 
+  static void login() async{
+    await http.post(
+      Uri.parse('$_apiUrl/login'),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+
   static Future<String> history(String characterName) async {
     final response = await http.post(
       Uri.parse('$_apiUrl/history'),
