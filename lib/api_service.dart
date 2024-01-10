@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String _apiUrl = 'http://34.128.107.235';
+  static const String _apiUrl = 'https://l-2fjlhhtoeq-et.a.run.app';
 
   static Future<String> generate(
       String text, String characterName, String email) async {

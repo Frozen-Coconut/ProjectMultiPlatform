@@ -35,16 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
             color: Theme.of(context).canvasColor
           ),
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: 400,
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.all(Radius.circular(10)),
-              //   boxShadow: [
-              //     BoxShadow(color: Colors.grey, offset: Offset(8, 8), blurRadius: 20)
-              //   ]
-              //
-              // ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
