@@ -1,4 +1,4 @@
-package com.example.whats_ai
+package id.ac.istts.whatsai
 
 import io.flutter.embedding.android.FlutterActivity
 
